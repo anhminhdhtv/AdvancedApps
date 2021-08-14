@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_main"
+    app:startDestination="@id/oderFragment">
+
+    <fragment
+        android:id="@+id/oderFragment"
+        android:name="com.example.mincoffee.ui.main.oder.OderFragment"
+        android:label="fragment_oder"
+        tools:layout="@layout/fragment_oder" >
+        <action
+            android:id="@+id/action_oderFragment_to_voucherFragment"
+            app:destination="@id/voucherFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/voucherFragment"
+        android:name="com.example.mincoffee.ui.main.voucher.VoucherFragment"
+        android:label="fragment_voucher"
+        tools:layout="@layout/fragment_voucher" >
+        <action
+            android:id="@+id/action_voucherFragment_to_accountFragment"
+            app:destination="@id/accountFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.example.mincoffee.ui.main.account.AccountFragment"
+        android:label="fragment_account"
+        tools:layout="@layout/fragment_account" />
+</navigation>
