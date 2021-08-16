@@ -1,5 +1,6 @@
 package com.example.mincoffee.data.model;
 
+
 public class Drink {
     private String name;
     private String description;

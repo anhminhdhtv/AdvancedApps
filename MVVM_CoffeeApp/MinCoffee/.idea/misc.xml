@@ -3,8 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Learning/AdvancedApps/MVVM_CoffeeApp/MinCoffee/app/src/main/res/layout/activity_login.xml" value="0.371875" />
         <entry key="..\:/Learning/AdvancedApps/MVVM_CoffeeApp/MinCoffee/app/src/main/res/layout/activity_main.xml" value="0.3578125" />
-        <entry key="..\:/Learning/AdvancedApps/MVVM_CoffeeApp/MinCoffee/app/src/main/res/layout/activity_splash.xml" value="0.22" />
+        <entry key="..\:/Learning/AdvancedApps/MVVM_CoffeeApp/MinCoffee/app/src/main/res/layout/activity_splash.xml" value="0.25" />
         <entry key="..\:/Learning/AdvancedApps/MVVM_CoffeeApp/MinCoffee/app/src/main/res/layout/fragment_account.xml" value="0.371875" />
         <entry key="..\:/Learning/AdvancedApps/MVVM_CoffeeApp/MinCoffee/app/src/main/res/layout/fragment_oder.xml" value="0.5" />
         <entry key="..\:/Learning/AdvancedApps/MVVM_CoffeeApp/MinCoffee/app/src/main/res/layout/fragment_voucher.xml" value="0.371875" />

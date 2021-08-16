@@ -12,9 +12,10 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.example.mincoffee.R;
+import com.example.mincoffee.ui.BaseActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     BottomNavigationView bottomNavigationView;
 
@@ -22,15 +23,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        View decorView = getWindow().getDecorView();
-        decorView.setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_IMMERSIVE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         setUpNavigation();
     }
-
     public void setUpNavigation() {
         bottomNavigationView = findViewById(R.id.bttm_nav);
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
@@ -38,4 +32,5 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(bottomNavigationView,
                 navHostFragment.getNavController());
     }
+
 }
