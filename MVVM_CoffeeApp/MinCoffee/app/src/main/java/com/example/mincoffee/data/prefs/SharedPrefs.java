@@ -3,7 +3,7 @@ package com.example.mincoffee.data.prefs;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.mincoffee.CustomApplication;
+import com.example.mincoffee.MyApplication;
 
 public class SharedPrefs {
     private static final String PREFS_NAME = "share_prefs";
@@ -11,7 +11,7 @@ public class SharedPrefs {
     private final SharedPreferences mSharedPreferences;
 
     private SharedPrefs() {
-        mSharedPreferences = CustomApplication.self().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        mSharedPreferences = MyApplication.self().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }
 
     public static SharedPrefs getInstance() {
@@ -33,8 +33,11 @@ public class SharedPrefs {
             return (T) Integer.valueOf(mSharedPreferences.getInt(key, 0));
         } else if (anonymousClass == Long.class) {
             return (T) Long.valueOf(mSharedPreferences.getLong(key, 0));
+        } else {
+            return (T) MyApplication.self()
+                    .getGson()
+                    .fromJson(mSharedPreferences.getString(key, ""), anonymousClass);
         }
-        return null;
     }
 
     public <T> void put(String key, T data) {
@@ -50,7 +53,7 @@ public class SharedPrefs {
         } else if (data instanceof Long) {
             editor.putLong(key, (Long) data);
         } else {
-            editor.putString(key, CustomApplication.self().getGson().toJson(data));
+            editor.putString(key, MyApplication.self().getGson().toJson(data));
         }
         editor.apply();
     }

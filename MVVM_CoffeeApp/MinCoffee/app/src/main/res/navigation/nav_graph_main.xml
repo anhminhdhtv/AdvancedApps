@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/oderFragment"
-        android:name="com.example.mincoffee.ui.main.oder.OderFragment"
+        android:name="com.example.mincoffee.ui.main.oder.OrderFragment"
         android:label="fragment_oder"
         tools:layout="@layout/fragment_oder" >
         <action

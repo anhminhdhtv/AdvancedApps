@@ -1,19 +1,10 @@
 package com.example.mincoffee.ui.splash;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.example.mincoffee.R;
-import com.example.mincoffee.data.prefs.SharedPrefs;
 import com.example.mincoffee.ui.BaseActivity;
 import com.example.mincoffee.ui.login.LoginActivity;
 import com.example.mincoffee.ui.main.MainActivity;
@@ -34,7 +25,10 @@ public class SplashActivity extends BaseActivity {
             intent = new Intent(this, LoginActivity.class);
         }
 
-        new Handler().postDelayed(() -> startActivity(intent), 1000);
+        new Handler().postDelayed(() -> {
+            startActivity(intent);
+            finish();
+        }, 1000);
     }
 
     private boolean isUserLogin() {

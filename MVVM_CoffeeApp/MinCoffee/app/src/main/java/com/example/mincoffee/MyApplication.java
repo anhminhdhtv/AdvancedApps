@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 public class CustomApplication extends Application {
     private static CustomApplication mSelf;
     private Gson mGson;
+    private AppContainer mAppContainer;
 
     public static CustomApplication self() {
         return mSelf;
@@ -17,9 +18,13 @@ public class CustomApplication extends Application {
         super.onCreate();
         mSelf = this;
         mGson = new Gson();
+        mAppContainer = new AppContainer();
     }
 
     public Gson getGson() {
         return mGson;
+    }
+    public AppContainer getAppContainer(){
+        return mAppContainer;
     }
 }
