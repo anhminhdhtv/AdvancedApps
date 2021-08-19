@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@color/hex_e0f2f2"
         android:fitsSystemWindows="true"
+        android:elevation="5dp"
         android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
@@ -92,10 +93,10 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/hex_f3f3f3"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="2"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:padding="12dp"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2"
         tools:listitem="@layout/item_drink" />
 </LinearLayout>

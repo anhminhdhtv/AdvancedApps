@@ -33,7 +33,7 @@ public class SplashActivity extends BaseActivity {
 
     private boolean isUserLogin() {
 //        return SharedPrefs.getInstance().get(IS_USER_LOGIN, Boolean.class);
-        return false;
+        return true;
     }
 
 }

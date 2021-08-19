@@ -37,7 +37,7 @@ public class OrderViewModel extends ViewModel {
                 .filter(drink -> drink.getType() == drinkType)
                 .collect(Collectors.toList());
 
-        mSelectedDrinkList.setValue(selectedDrinks);
+        mSelectedDrinkList.postValue(selectedDrinks);
     }
 
     public LiveData<List<Drink>> getSelectedDrinkList() {

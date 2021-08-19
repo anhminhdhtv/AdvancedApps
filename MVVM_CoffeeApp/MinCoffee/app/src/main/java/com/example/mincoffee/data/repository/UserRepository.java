@@ -22,6 +22,6 @@ public class UserRepository {
                 "Minh",
                 "https://product.hstatic.net/1000075078/product/cafe-den-da_18234c186f2f44f0a2d7ec1ce0e58158_master.jpg",
                 LocalDate.of(1996, 11, 12),
-                "");
+                "No Trang Long");
     }
 }

@@ -6,6 +6,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -21,6 +24,8 @@ import com.example.mincoffee.utils.AppConstant;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
+
+import lombok.SneakyThrows;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,10 +74,19 @@ public class OrderFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mOrderViewModel = new OrderViewModel(
-                MyApplication.self().getAppContainer().userRepository,
-                MyApplication.self().getAppContainer().drinkRepository);
+        mOrderViewModel = new ViewModelProvider(
+                this,
+                MyApplication.self().getAppComponent().viewModelProviderFactory)
+                .get(OrderViewModel.class);
         subscribeToModel(mOrderViewModel.getSelectedDrinkList(), mOrderViewModel.getUserInfo());
+//        new Thread(){
+//            @SneakyThrows
+//            @Override
+//            public void run() {
+//                sleep(2000);
+//                requireActivity().runOnUiThread(() -> mOrderViewModel.loadDrinkList(AppConstant.DrinkType.COFFEE));
+//            }
+//        }.start();
     }
 
     private void initViews(View rootItem) {
@@ -82,16 +96,24 @@ public class OrderFragment extends Fragment {
     }
 
     private void setup() {
+        mDrinkListAdapter = new DrinkListAdapter(drink -> {
+
+        });
+        mRvDrinkList.setAdapter(mDrinkListAdapter);
+
         mTlDrinkType.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()){
                     case 0:
                         mOrderViewModel.loadDrinkList(AppConstant.DrinkType.COFFEE);
+                        break;
                     case 1:
                         mOrderViewModel.loadDrinkList(AppConstant.DrinkType.TEA);
+                        break;
                     case 2:
                         mOrderViewModel.loadDrinkList(AppConstant.DrinkType.FRUIT);
+                        break;
                 }
             }
 
@@ -104,12 +126,6 @@ public class OrderFragment extends Fragment {
 
             }
         });
-
-        mDrinkListAdapter = new DrinkListAdapter(drink -> {
-
-        });
-
-        mRvDrinkList.setAdapter(mDrinkListAdapter);
     }
 
     private void subscribeToModel(LiveData<List<Drink>> drinkList, LiveData<User> userLiveData) {

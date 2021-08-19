@@ -24,6 +24,7 @@ public class DrinkListAdapter extends RecyclerView.Adapter<DrinkListAdapter.View
 
     public DrinkListAdapter(OnItemClickListener onItemClickListener) {
         this.mOnItemClickListener = onItemClickListener;
+        setHasStableIds(true);
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -62,7 +63,7 @@ public class DrinkListAdapter extends RecyclerView.Adapter<DrinkListAdapter.View
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mTvName, mTvDescription, mTvPrice;
         private ImageView mIvDrink;
 

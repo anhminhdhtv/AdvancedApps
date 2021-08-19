@@ -2,14 +2,15 @@ package com.example.mincoffee;
 
 import android.app.Application;
 
+import com.example.mincoffee.di.component.AppComponent;
 import com.google.gson.Gson;
 
-public class CustomApplication extends Application {
-    private static CustomApplication mSelf;
+public class MyApplication extends Application {
+    private static MyApplication mSelf;
     private Gson mGson;
-    private AppContainer mAppContainer;
+    private AppComponent mAppComponent;
 
-    public static CustomApplication self() {
+    public static MyApplication self() {
         return mSelf;
     }
 
@@ -18,13 +19,13 @@ public class CustomApplication extends Application {
         super.onCreate();
         mSelf = this;
         mGson = new Gson();
-        mAppContainer = new AppContainer();
+        mAppComponent = new AppComponent();
     }
 
     public Gson getGson() {
         return mGson;
     }
-    public AppContainer getAppContainer(){
-        return mAppContainer;
+    public AppComponent getAppComponent(){
+        return mAppComponent;
     }
 }
