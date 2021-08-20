@@ -79,14 +79,7 @@ public class OrderFragment extends Fragment {
                 MyApplication.self().getAppComponent().viewModelProviderFactory)
                 .get(OrderViewModel.class);
         subscribeToModel(mOrderViewModel.getSelectedDrinkList(), mOrderViewModel.getUserInfo());
-//        new Thread(){
-//            @SneakyThrows
-//            @Override
-//            public void run() {
-//                sleep(2000);
-//                requireActivity().runOnUiThread(() -> mOrderViewModel.loadDrinkList(AppConstant.DrinkType.COFFEE));
-//            }
-//        }.start();
+        mOrderViewModel.loadDrinkList(AppConstant.DrinkType.COFFEE);
     }
 
     private void initViews(View rootItem) {
