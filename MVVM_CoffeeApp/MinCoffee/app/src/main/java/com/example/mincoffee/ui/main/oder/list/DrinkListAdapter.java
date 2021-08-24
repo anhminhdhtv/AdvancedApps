@@ -1,4 +1,4 @@
-package com.example.mincoffee.ui.main.oder;
+package com.example.mincoffee.ui.main.oder.list;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -52,6 +52,7 @@ public class DrinkListAdapter extends RecyclerView.Adapter<DrinkListAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Drink drink = mDrinkList.get(position);
         holder.display(drink);
+        holder.itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(drink));
     }
 
     @Override

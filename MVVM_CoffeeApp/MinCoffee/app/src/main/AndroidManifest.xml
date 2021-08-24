@@ -14,6 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MinCoffee">
         <activity
+            android:name=".ui.main.oder.cart.CartActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ui.main.oder.detail.DrinkDetailActivity"
+            android:exported="true" />
+        <activity
             android:name=".ui.login.LoginActivity"
             android:exported="true" />
         <activity

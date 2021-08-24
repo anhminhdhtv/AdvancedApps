@@ -1,4 +1,4 @@
-package com.example.mincoffee.ui.main.oder;
+package com.example.mincoffee.ui.main.oder.list;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

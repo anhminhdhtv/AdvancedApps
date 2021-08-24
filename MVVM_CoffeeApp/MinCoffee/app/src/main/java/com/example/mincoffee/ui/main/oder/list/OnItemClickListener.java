@@ -1,4 +1,4 @@
-package com.example.mincoffee.ui.main.oder;
+package com.example.mincoffee.ui.main.oder.list;
 
 import com.example.mincoffee.data.model.Drink;
 

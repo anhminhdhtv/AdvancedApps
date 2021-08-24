@@ -5,13 +5,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mincoffee.data.repository.DrinkRepository;
 import com.example.mincoffee.data.repository.UserRepository;
-import com.example.mincoffee.ui.main.oder.OrderViewModel;
+import com.example.mincoffee.ui.main.oder.list.OrderViewModel;
 
-public class ViewModelProviderFactory extends ViewModelProvider.NewInstanceFactory {
+public class MainViewModelFactory extends ViewModelProvider.NewInstanceFactory {
     private final UserRepository mUserRepository;
     private final DrinkRepository mDrinkRepository;
 
-    public ViewModelProviderFactory(UserRepository userRepository, DrinkRepository drinkRepository) {
+    public MainViewModelFactory(UserRepository userRepository, DrinkRepository drinkRepository) {
         this.mUserRepository = userRepository;
         this.mDrinkRepository = drinkRepository;
     }

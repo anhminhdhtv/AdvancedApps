@@ -1,14 +1,19 @@
-package com.example.mincoffee.ui.main.oder;
+package com.example.mincoffee.ui.main.oder.list;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.ActivityResultRegistry;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -19,13 +24,14 @@ import android.widget.TextView;
 import com.example.mincoffee.MyApplication;
 import com.example.mincoffee.R;
 import com.example.mincoffee.data.model.Drink;
+import com.example.mincoffee.data.model.ReservedDrink;
 import com.example.mincoffee.data.model.User;
+import com.example.mincoffee.ui.main.oder.detail.DrinkDetailActivity;
+import com.example.mincoffee.ui.widgets.CartFloatButton;
 import com.example.mincoffee.utils.AppConstant;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.List;
-
-import lombok.SneakyThrows;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +44,18 @@ public class OrderFragment extends Fragment {
     private TabLayout mTlDrinkType;
     private DrinkListAdapter mDrinkListAdapter;
     private OrderViewModel mOrderViewModel;
+    private CartFloatButton mBtnOrder;
+    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent intent = result.getData();
+                        ReservedDrink reservedDrink = (ReservedDrink) intent.getSerializableExtra("reserved_drink");
+                        mBtnOrder.setData(reservedDrink.getAmount(), reservedDrink.getTotalPrice());
+                    }
+                }
+            });
 
     public OrderFragment() {
         // Required empty public constructor
@@ -76,7 +94,7 @@ public class OrderFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mOrderViewModel = new ViewModelProvider(
                 this,
-                MyApplication.self().getAppComponent().viewModelProviderFactory)
+                MyApplication.self().getAppComponent().mainViewModelFactory)
                 .get(OrderViewModel.class);
         subscribeToModel(mOrderViewModel.getSelectedDrinkList(), mOrderViewModel.getUserInfo());
         mOrderViewModel.loadDrinkList(AppConstant.DrinkType.COFFEE);
@@ -86,18 +104,21 @@ public class OrderFragment extends Fragment {
         mTvAddress = rootItem.findViewById(R.id.tv_address);
         mRvDrinkList = rootItem.findViewById(R.id.rv_list_drink);
         mTlDrinkType = rootItem.findViewById(R.id.tl_drink_type);
+        mBtnOrder = rootItem.findViewById(R.id.btn_cart);
     }
 
     private void setup() {
         mDrinkListAdapter = new DrinkListAdapter(drink -> {
-
+            Intent intent = new Intent(requireActivity(), DrinkDetailActivity.class);
+            intent.putExtra("bundle", drink);
+            mStartForResult.launch(intent);
         });
         mRvDrinkList.setAdapter(mDrinkListAdapter);
 
         mTlDrinkType.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                switch (tab.getPosition()){
+                switch (tab.getPosition()) {
                     case 0:
                         mOrderViewModel.loadDrinkList(AppConstant.DrinkType.COFFEE);
                         break;
@@ -119,6 +140,7 @@ public class OrderFragment extends Fragment {
 
             }
         });
+
     }
 
     private void subscribeToModel(LiveData<List<Drink>> drinkList, LiveData<User> userLiveData) {
