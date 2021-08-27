@@ -7,12 +7,10 @@ import android.os.Bundle;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.ActivityResultRegistry;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,15 +21,11 @@ import android.widget.TextView;
 
 import com.example.mincoffee.MyApplication;
 import com.example.mincoffee.R;
-import com.example.mincoffee.data.model.Drink;
 import com.example.mincoffee.data.model.ReservedDrink;
-import com.example.mincoffee.data.model.User;
 import com.example.mincoffee.ui.main.oder.detail.DrinkDetailActivity;
 import com.example.mincoffee.ui.widgets.CartFloatButton;
 import com.example.mincoffee.utils.AppConstant;
 import com.google.android.material.tabs.TabLayout;
-
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,17 +39,8 @@ public class OrderFragment extends Fragment {
     private DrinkListAdapter mDrinkListAdapter;
     private OrderViewModel mOrderViewModel;
     private CartFloatButton mBtnOrder;
-    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent intent = result.getData();
-                        ReservedDrink reservedDrink = (ReservedDrink) intent.getSerializableExtra("reserved_drink");
-                        mBtnOrder.setData(reservedDrink.getAmount(), reservedDrink.getTotalPrice());
-                    }
-                }
-            });
+    private ActivityResultLauncher<Intent> mDrinkDetailLauncher;
+    private ActivityResultLauncher<Intent> mCartLauncher;
 
     public OrderFragment() {
         // Required empty public constructor
@@ -96,7 +81,7 @@ public class OrderFragment extends Fragment {
                 this,
                 MyApplication.self().getAppComponent().mainViewModelFactory)
                 .get(OrderViewModel.class);
-        subscribeToModel(mOrderViewModel.getSelectedDrinkList(), mOrderViewModel.getUserInfo());
+        subscribeToModel();
         mOrderViewModel.loadDrinkList(AppConstant.DrinkType.COFFEE);
     }
 
@@ -110,8 +95,8 @@ public class OrderFragment extends Fragment {
     private void setup() {
         mDrinkListAdapter = new DrinkListAdapter(drink -> {
             Intent intent = new Intent(requireActivity(), DrinkDetailActivity.class);
-            intent.putExtra("bundle", drink);
-            mStartForResult.launch(intent);
+            intent.putExtra("new_selected_drink", drink);
+            mDrinkDetailLauncher.launch(intent);
         });
         mRvDrinkList.setAdapter(mDrinkListAdapter);
 
@@ -141,10 +126,43 @@ public class OrderFragment extends Fragment {
             }
         });
 
+        setupLaunchers();
     }
 
-    private void subscribeToModel(LiveData<List<Drink>> drinkList, LiveData<User> userLiveData) {
-        drinkList.observe(getViewLifecycleOwner(), drinks -> mDrinkListAdapter.setDrinkList(drinks));
-        userLiveData.observe(getViewLifecycleOwner(), user -> mTvAddress.setText(user.getAddress()));
+    private void subscribeToModel() {
+        mOrderViewModel.getDrinkList().observe(
+                getViewLifecycleOwner(),
+                drinks -> mDrinkListAdapter.setDrinkList(drinks)
+        );
+
+        mOrderViewModel.getUserInfo().observe(
+                getViewLifecycleOwner(),
+                user -> mTvAddress.setText(user.getAddress())
+        );
+
+        mOrderViewModel.getCartInfo().observe(
+                getViewLifecycleOwner(),
+                cart -> mBtnOrder.setData(cart.getReservedDrinkList().size(), cart.getTotalPrice())
+        );
     }
+
+    private void setupLaunchers() {
+        mDrinkDetailLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent intent = result.getData();
+                        ReservedDrink reservedDrink = (ReservedDrink) intent.getSerializableExtra("reserved_drink");
+                        mOrderViewModel.addItemToCart(reservedDrink);
+                    }
+                });
+
+        mCartLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                    }
+                });
+    }
+
 }

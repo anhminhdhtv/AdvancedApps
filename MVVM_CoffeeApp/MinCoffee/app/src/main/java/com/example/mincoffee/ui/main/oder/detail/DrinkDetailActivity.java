@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mincoffee.R;
 import com.example.mincoffee.data.model.Drink;
+import com.example.mincoffee.data.model.ReservedDrink;
 import com.example.mincoffee.ui.BaseActivity;
 import com.example.mincoffee.ui.main.oder.list.OnItemClickListener;
 import com.example.mincoffee.utils.AppConstant;
@@ -24,12 +25,13 @@ import com.squareup.picasso.Picasso;
 public class DrinkDetailActivity extends BaseActivity {
     private ImageView mIvDrink;
     private TextView mTvName, mTvPrice, mTvDescription, mTvAmount;
-    private Drink mDrink;
     private Toolbar mToolbar;
     private ImageButton mBtnPlus, mBtnMinus;
     private RadioButton mRadioBtnSmall, mRadioBtnLarger;
     private Button mBtnOrder;
     private DrinkDetailViewModel mDrinkDetailViewModel;
+    private ReservedDrink mReservedDrink;
+    private boolean mIsNewSelectedDrink = true;
 
     @Override
     protected void onStart() {
@@ -39,7 +41,12 @@ public class DrinkDetailActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDrink = (Drink) getIntent().getSerializableExtra("bundle");
+        mReservedDrink = (ReservedDrink) getIntent().getSerializableExtra("new_selected_drink");
+
+        if (mReservedDrink == null) {
+            mReservedDrink = (ReservedDrink) getIntent().getSerializableExtra("old_selected_drink");
+            mIsNewSelectedDrink = false;
+        }
 
         setContentView(R.layout.activity_drink_detail);
         initViews();
@@ -47,7 +54,7 @@ public class DrinkDetailActivity extends BaseActivity {
         setup();
 
         mDrinkDetailViewModel = new ViewModelProvider(this).get(DrinkDetailViewModel.class);
-        mDrinkDetailViewModel.setSelectedDrink(mDrink);
+        mDrinkDetailViewModel.setSelectedDrink(mReservedDrink);
         subscribeToModel();
     }
 
@@ -66,6 +73,8 @@ public class DrinkDetailActivity extends BaseActivity {
     }
 
     private void setup() {
+        mToolbar.setNavigationOnClickListener(v -> finish());
+
         mRadioBtnSmall.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 mRadioBtnLarger.setSelected(false);
@@ -90,27 +99,47 @@ public class DrinkDetailActivity extends BaseActivity {
 
         mBtnOrder.setOnClickListener(v -> {
             Intent returnIntent = new Intent();
-            returnIntent.putExtra("reserved_drink", mDrinkDetailViewModel.getReservedDrink());
-            setResult(Activity.RESULT_OK,returnIntent);
+            returnIntent.putExtra("reserved_drink", this.mReservedDrink);
+            setResult(Activity.RESULT_OK, returnIntent);
             finish();
         });
     }
 
     private void display() {
-        Picasso.get().load(mDrink.getImageURL()).into(mIvDrink);
-        mTvName.setText(mDrink.getName());
-        mTvPrice.setText(Utilities.castToStringPrice(mDrink.getPrice()));
-        mTvDescription.setText(mDrink.getDescription());
+        Picasso.get().load(mReservedDrink.getDrink().getImageURL()).into(mIvDrink);
+        mTvName.setText(mReservedDrink.getDrink().getName());
+        mTvPrice.setText(Utilities.castToStringPrice(mReservedDrink.getDrink().getPrice()));
+        mTvDescription.setText(mReservedDrink.getDrink().getDescription());
     }
 
     private void subscribeToModel() {
-        mDrinkDetailViewModel.getAmountOfDrink().observe(this, amount -> {
-            mTvAmount.setText(String.valueOf(amount));
-        });
-
-        mDrinkDetailViewModel.getPrice().observe(this, price -> {
-            mBtnOrder.setText(String.format("ORDER - %s", Utilities.castToStringPrice(price)));
+        mDrinkDetailViewModel.getReservedDrink().observe(this, reservedDrink -> {
+            updateViews(reservedDrink);
+            this.mReservedDrink = reservedDrink;
         });
     }
 
+    private void updateViews(ReservedDrink reservedDrink) {
+        mTvAmount.setText(String.valueOf(reservedDrink.getAmount()));
+        String btnText = String.format(
+                "ORDER - %s",
+                Utilities.castToStringPrice(reservedDrink.getTotalPrice())
+        );
+        int btnBackground = getColor(R.color.hex_01998d);
+
+        if (mIsNewSelectedDrink) {
+            if (reservedDrink.getAmount() == 1) {
+                mBtnMinus.setEnabled(false);
+            } else {
+                mBtnMinus.setEnabled(true);
+            }
+        } else {
+            if (reservedDrink.getAmount() == 0) {
+                btnText = "Delete Item";
+                btnBackground = getColor(R.color.hex_fc0000);
+            }
+        }
+        mBtnOrder.setText(btnText);
+        mBtnOrder.setBackgroundColor(btnBackground);
+    }
 }

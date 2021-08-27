@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class Drink implements Serializable {
+    private String id;
     private String name;
     private String description;
     private String imageURL;
@@ -18,5 +19,6 @@ public class Drink implements Serializable {
         this.imageURL = imageURL;
         this.price = price;
         this.type = type;
+        this.id = java.util.UUID.randomUUID().toString();
     }
 }

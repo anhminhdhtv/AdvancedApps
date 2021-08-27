@@ -11,11 +11,24 @@ public class ReservedDrink implements Serializable {
     private int size;
     private int totalPrice;
 
-    public ReservedDrink(Drink drink, int amount, int size, int totalPrice) {
+    public ReservedDrink(Drink drink, int amount, int size) {
         this.drink = drink;
         this.amount = amount;
         this.size = size;
-        this.totalPrice = totalPrice;
     }
-    public ReservedDrink(){}
+
+    public ReservedDrink() {
+    }
+
+    public int getTotalPrice() {
+        return (drink.getPrice() + size) * amount;
+    }
+
+    public void increaseItemNumber(){
+        amount ++;
+    }
+
+    public void decreaseItemNumber(){
+        amount --;
+    }
 }

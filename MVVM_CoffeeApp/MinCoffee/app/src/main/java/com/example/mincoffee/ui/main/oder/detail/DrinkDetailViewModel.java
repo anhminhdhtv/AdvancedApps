@@ -6,64 +6,35 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.mincoffee.data.model.Drink;
 import com.example.mincoffee.data.model.ReservedDrink;
+import com.example.mincoffee.utils.AppConstant;
 
 public class DrinkDetailViewModel extends ViewModel {
 
-    private Drink mSelectedDrink;
-    private MutableLiveData<Integer> mPrice = new MutableLiveData<>();
-    private MutableLiveData<Integer> mAmount = new MutableLiveData<>();
-    private int mSizePrice;
+    private MutableLiveData<ReservedDrink> mReservedDrink = new MutableLiveData<>();
 
-    public DrinkDetailViewModel() {
-        mAmount.postValue(1);
-    }
-
-    public void setSelectedDrink(Drink selectedDrink) {
-        mSelectedDrink = selectedDrink;
-        mPrice.postValue(mSelectedDrink.getPrice());
-    }
-
-    public LiveData<Integer> getAmountOfDrink() {
-        return mAmount;
-    }
-
-    public LiveData<Integer> getPrice() {
-        return mPrice;
+    public void setSelectedDrink(ReservedDrink selectedDrink) {
+        mReservedDrink.postValue(selectedDrink);
     }
 
     public void plusDrink() {
-        mAmount.setValue(mAmount.getValue() + 1);
-        update();
+        ReservedDrink reservedDrink = mReservedDrink.getValue();
+        reservedDrink.increaseItemNumber();
+        mReservedDrink.setValue(reservedDrink);
     }
 
     public void minusDrink() {
-        mAmount.setValue(mAmount.getValue() - 1);
-        update();
+        ReservedDrink reservedDrink = mReservedDrink.getValue();
+        reservedDrink.decreaseItemNumber();
+        mReservedDrink.setValue(reservedDrink);
     }
 
-    public ReservedDrink getReservedDrink() {
-        return new ReservedDrink(
-                mSelectedDrink,
-                mAmount.getValue(),
-                mSizePrice,
-                mPrice.getValue());
+    public LiveData<ReservedDrink> getReservedDrink(){
+        return mReservedDrink;
     }
-
 
     public void setSize(int size) {
-        switch (size) {
-            case 0:
-                mSizePrice = 0;
-                break;
-            case 1:
-                mSizePrice = 10000;
-                break;
-        }
-        update();
-    }
-
-    private void update() {
-        int price = (mSelectedDrink.getPrice() + mSizePrice) * mAmount.getValue();
-        mPrice.setValue(price);
+        ReservedDrink reservedDrink = mReservedDrink.getValue();
+        reservedDrink.setSize(size);
+        mReservedDrink.setValue(reservedDrink);
     }
 }
