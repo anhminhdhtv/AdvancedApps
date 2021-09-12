@@ -23,16 +23,16 @@
                 android:id="@+id/iv_drink"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="fitCenter"
                 android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
                 app:layout_collapseMode="parallax" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
                 android:layout_marginTop="24dp"
+                app:layout_collapseMode="pin"
                 app:navigationIcon="@drawable/ic_left_arrow" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -79,7 +79,7 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="sans-serif"
                 android:text="Một tách cà phê đen thơm ngào ngạt, phảng phất mùi cacao là món quà tự thưởng tuyệt vời nhất cho những ai mê đắm tinh chất nguyên bản nhất của cà phê. Một tách cà phê trầm lắng, thi vị giữa dòng đời vồn vã."
-                android:textSize="11sp" />
+                android:textSize="12sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -202,11 +202,11 @@
             android:id="@+id/btn_plus"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginStart="130dp"
+            android:layout_marginEnd="130dp"
             android:background="@null"
             android:src="@drawable/ic_add"
             app:layout_constraintBottom_toTopOf="@+id/btn_order"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -227,20 +227,20 @@
             android:id="@+id/btn_minus"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginEnd="130dp"
+            android:layout_marginStart="130dp"
             android:background="@null"
             android:src="@drawable/ic_remove"
             app:layout_constraintBottom_toTopOf="@+id/btn_order"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_order"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="24dp"
             android:layout_marginBottom="24dp"
-            android:backgroundTint="@color/hex_01998d"
+            android:background="@drawable/bg_green_rounded_corner"
             android:fontFamily="sans-serif-medium"
             android:paddingVertical="12dp"
             android:text="ORDER - 20.000đ"

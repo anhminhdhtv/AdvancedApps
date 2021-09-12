@@ -4,12 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Supplier;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,10 +20,14 @@ import android.widget.TextView;
 
 import com.example.mincoffee.MyApplication;
 import com.example.mincoffee.R;
+import com.example.mincoffee.data.enums.DrinkSize;
 import com.example.mincoffee.data.model.ReservedDrink;
+import com.example.mincoffee.ui.main.oder.cart.CartActivity;
 import com.example.mincoffee.ui.main.oder.detail.DrinkDetailActivity;
+import com.example.mincoffee.ui.main.oder.detail.DrinkDetailViewModel;
 import com.example.mincoffee.ui.widgets.CartFloatButton;
 import com.example.mincoffee.utils.AppConstant;
+import com.example.mincoffee.viewModel.ViewModelFactory;
 import com.google.android.material.tabs.TabLayout;
 
 /**
@@ -77,10 +80,16 @@ public class OrderFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mOrderViewModel = new ViewModelProvider(
-                this,
-                MyApplication.self().getAppComponent().mainViewModelFactory)
-                .get(OrderViewModel.class);
+//        mOrderViewModel = new ViewModelProvider(
+//                this,
+//                MyApplication.self().getAppComponent().viewModelFactory)
+//                .get(OrderViewModel.class);
+
+        Supplier<OrderViewModel> supplier = () -> new OrderViewModel(
+                MyApplication.self().getAppComponent().userRepository,
+                MyApplication.self().getAppComponent().drinkRepository);
+        ViewModelFactory<OrderViewModel> factory = new ViewModelFactory<>(OrderViewModel.class, supplier);
+        mOrderViewModel = new ViewModelProvider(this, factory).get(OrderViewModel.class);
         subscribeToModel();
         mOrderViewModel.loadDrinkList(AppConstant.DrinkType.COFFEE);
     }
@@ -94,8 +103,9 @@ public class OrderFragment extends Fragment {
 
     private void setup() {
         mDrinkListAdapter = new DrinkListAdapter(drink -> {
+            ReservedDrink reservedDrink = new ReservedDrink(drink, 1, DrinkSize.SMALL);
             Intent intent = new Intent(requireActivity(), DrinkDetailActivity.class);
-            intent.putExtra("new_selected_drink", drink);
+            intent.putExtra("new_selected_drink", reservedDrink);
             mDrinkDetailLauncher.launch(intent);
         });
         mRvDrinkList.setAdapter(mDrinkListAdapter);
@@ -124,6 +134,12 @@ public class OrderFragment extends Fragment {
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
+        });
+
+        mBtnOrder.setOnClickListener(v -> {
+            Intent intent = new Intent(requireActivity(), CartActivity.class);
+            intent.putExtra("cart_data", mOrderViewModel.getCartData());
+            mCartLauncher.launch(intent);
         });
 
         setupLaunchers();

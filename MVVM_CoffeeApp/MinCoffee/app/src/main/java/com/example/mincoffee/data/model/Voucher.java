@@ -1,10 +1,14 @@
 package com.example.mincoffee.data.model;
 
-import android.icu.util.LocaleData;
+import java.time.LocalDate;
 
+import lombok.Data;
+
+@Data
 public class Voucher {
     private String name;
-    private String imageURL;
+    private String condition;
     private int discountPercent;
-    private LocaleData expiredTime;
+    private int maxDiscount;
+    private LocalDate expiredTime;
 }

@@ -9,6 +9,6 @@ public class AppConstant {
 
     public static class DrinkSize {
         public static final int SMALL = 0;
-        public static final int LARGER = 100000;
+        public static final int LARGER = 10000;
     }
 }

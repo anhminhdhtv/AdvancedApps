@@ -10,16 +10,21 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.util.Supplier;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.mincoffee.MyApplication;
 import com.example.mincoffee.R;
-import com.example.mincoffee.data.model.Drink;
+import com.example.mincoffee.data.enums.DrinkSize;
 import com.example.mincoffee.data.model.ReservedDrink;
 import com.example.mincoffee.ui.BaseActivity;
-import com.example.mincoffee.ui.main.oder.list.OnItemClickListener;
+import com.example.mincoffee.ui.main.oder.cart.CartViewModel;
 import com.example.mincoffee.utils.AppConstant;
 import com.example.mincoffee.utils.Utilities;
+import com.example.mincoffee.viewModel.ViewModelFactory;
 import com.squareup.picasso.Picasso;
 
 public class DrinkDetailActivity extends BaseActivity {
@@ -28,19 +33,16 @@ public class DrinkDetailActivity extends BaseActivity {
     private Toolbar mToolbar;
     private ImageButton mBtnPlus, mBtnMinus;
     private RadioButton mRadioBtnSmall, mRadioBtnLarger;
-    private Button mBtnOrder;
+    private AppCompatButton mBtnOrder;
     private DrinkDetailViewModel mDrinkDetailViewModel;
     private ReservedDrink mReservedDrink;
     private boolean mIsNewSelectedDrink = true;
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_drink_detail);
+
         mReservedDrink = (ReservedDrink) getIntent().getSerializableExtra("new_selected_drink");
 
         if (mReservedDrink == null) {
@@ -48,14 +50,9 @@ public class DrinkDetailActivity extends BaseActivity {
             mIsNewSelectedDrink = false;
         }
 
-        setContentView(R.layout.activity_drink_detail);
         initViews();
         display();
         setup();
-
-        mDrinkDetailViewModel = new ViewModelProvider(this).get(DrinkDetailViewModel.class);
-        mDrinkDetailViewModel.setSelectedDrink(mReservedDrink);
-        subscribeToModel();
     }
 
     private void initViews() {
@@ -77,15 +74,15 @@ public class DrinkDetailActivity extends BaseActivity {
 
         mRadioBtnSmall.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                mRadioBtnLarger.setSelected(false);
-                mDrinkDetailViewModel.setSize(AppConstant.DrinkSize.SMALL);
+                mRadioBtnLarger.setChecked(false);
+                mDrinkDetailViewModel.setSize(DrinkSize.SMALL);
             }
         });
 
         mRadioBtnLarger.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                mRadioBtnSmall.setSelected(false);
-                mDrinkDetailViewModel.setSize(AppConstant.DrinkSize.LARGER);
+                mRadioBtnSmall.setChecked(false);
+                mDrinkDetailViewModel.setSize(DrinkSize.LARGER);
             }
         });
 
@@ -103,6 +100,13 @@ public class DrinkDetailActivity extends BaseActivity {
             setResult(Activity.RESULT_OK, returnIntent);
             finish();
         });
+
+//        mDrinkDetailViewModel = new ViewModelProvider(this).get(DrinkDetailViewModel.class);
+//        mDrinkDetailViewModel.setSelectedDrink(mReservedDrink);
+        Supplier<DrinkDetailViewModel> supplier = () -> new DrinkDetailViewModel(mReservedDrink);
+        ViewModelFactory<DrinkDetailViewModel> factory = new ViewModelFactory<>(DrinkDetailViewModel.class, supplier);
+        mDrinkDetailViewModel = new ViewModelProvider(this, factory).get(DrinkDetailViewModel.class);
+        subscribeToModel();
     }
 
     private void display() {
@@ -135,7 +139,7 @@ public class DrinkDetailActivity extends BaseActivity {
             }
         } else {
             if (reservedDrink.getAmount() == 0) {
-                btnText = "Delete Item";
+                btnText = "Remove this drink";
                 btnBackground = getColor(R.color.hex_fc0000);
             }
         }

@@ -15,4 +15,9 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
 
     </style>
+
+    <!-- Bottom sheet theme -->
+    <style name="CustomBottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="android:backgroundTint">@android:color/transparent</item>
+    </style>
 </resources>

@@ -11,6 +11,7 @@ import com.example.mincoffee.data.model.ReservedDrink;
 import com.example.mincoffee.data.model.User;
 import com.example.mincoffee.data.repository.DrinkRepository;
 import com.example.mincoffee.data.repository.UserRepository;
+import com.example.mincoffee.ui.widgets.CartFloatButton;
 
 import java.util.List;
 
@@ -47,6 +48,10 @@ public class OrderViewModel extends ViewModel {
     public LiveData<Cart> getCartInfo() {
         return mCart;
     }
+    public Cart getCartData(){
+        return mCart.getValue();
+    }
+
 
     public void addItemToCart(ReservedDrink reservedDrink){
         Cart cart = this.mCart.getValue();
